@@ -1,0 +1,28 @@
+image: mhart/alpine-node:12
+
+stages:
+  - lint
+  - lintcss
+  - build
+
+lint test:
+  stage: lint
+  script:
+    - npm install --progress=false
+    - npm run lint:es:ci
+
+lint css:
+  stage: lintcss
+  script:
+    - npm install --progress=false
+    - npm run lint:css:ci
+
+build site:
+  stage: build
+  script:
+    - npm install --progress=false
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build

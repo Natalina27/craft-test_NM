@@ -1,0 +1,68 @@
+{
+  "name": "craft-team-test-task",
+  "private": true,
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "author": "Renal Safiulin",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "handlebars": "^4.7.6",
+    "jquery": "3.5.1",
+    "js-yaml": "^3.14.0",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2",
+    "mobx-react-devtools": "^6.1.1",
+    "mobx-react-router": "^4.1.0",
+    "popper.js": "^1.16.1",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "^16.13.1",
+    "react-lodash": "^0.1.2",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "typescript": "^3.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "prelint:es": "prettier --write \"src/**/*.{ts,js,tsx}\"",
+    "prelint:es:ci": "prettier --check \"src/**/*.{ts,js,tsx}\"",
+    "lint:es": "eslint --fix \"src/**/*.{ts,js,tsx}\"",
+    "lint:es:ci": "eslint --format ./node_modules/eslint-teamcity/index.js \"src/**/*.{ts,js,tsx}\"",
+    "lint:css": "stylelint --config .stylelintrc --fix \"src/**/*.css\"",
+    "lint:css:ci": "stylelint --config .stylelintrc --custom-formatter=node_modules/stylelint-teamcity-reporter \"src/**/*.css\""
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "./node_modules/@tinkoff/linters/eslint/base",
+      "./node_modules/@tinkoff/linters/eslint/base/prettier"
+    ],
+    "rules": {
+      "block-spacing": "error",
+      "import/no-default-export": "off"
+    }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@tinkoff/utils": "^2.1.2",
+    "@types/classnames": "^2.2.10",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.34",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-router-dom": "^5.1.5",
+    "@tinkoff/linters": "^1.0.0-rc.5",
+    "uuid": "^8.1.0"
+  }
+}
