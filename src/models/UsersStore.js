@@ -15,22 +15,16 @@ class ObservableUsersStore {
 
     lst['users']=JSON.stringify(this.usersState);
   }
-
+  // Пример функции добавления
   addUserItem = action("addUserItem", function(userItem) {
     const guid = uuidv4();
     this.users.push({...userItem, ...{ guid: guid } });
     this.saveLocal();
   });
+  // Добавить функцию удаления
 
-  delUserItem = action ("delUserItem", function (id) {
-    this.users.remove(this.users[id]);
-    this.saveLocal();;
-  });
+ // Добавить функцию редактирования
 
-  updateUserItem = action( "updateUserItem", function (itemId, itemObj) {
-    this.users[parseInt(itemId,10)] = itemObj;
-    this.saveLocal();
-  });
 }
 
 const insertData = (store) => {

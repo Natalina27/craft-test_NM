@@ -11,6 +11,7 @@
     "handlebars": "^4.7.6",
     "jquery": "3.5.1",
     "js-yaml": "^3.14.0",
+    "material-table": "^1.60.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "mobx-react-devtools": "^6.1.1",

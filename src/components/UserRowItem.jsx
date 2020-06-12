@@ -1,5 +1,4 @@
 import React from "react";
-import usersStore from '../models/UsersStore';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
@@ -21,7 +20,7 @@ const UserRowItem = (props) => {
         </span>
         <span key={`actdelete_${guid}`}
         className='actions'>
-        <Link to="/" onClick={(() => {usersStore.delUserItem(userID)})} ><Button variant="outline-danger">Del</Button></Link>
+        <Link to="/" onClick={(() => {})} ><Button variant="outline-danger">Del</Button></Link>
         </span>
       </td>
     </tr>
