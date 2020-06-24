@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import { observer } from 'mobx-react';
+import {observer} from 'mobx-react';
 import usersStore from '../models/UsersStore';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
 
 const ListUsers = observer(
-    function ListUsers (props) {
+    function ListUsers(props) {
         const [firstName, setFirstName] = useState('');
         const [lastName, setLastName] = useState('');
         const [age, setAge] = useState('');
@@ -26,16 +26,14 @@ const ListUsers = observer(
 
             return userIndex === -1
                 ? acc
-                : acc.concat([
-                    <UserRowItem
-                        key={`userItem_${index}`}
-                        value={value}
-                        userID={userIndex}
-                    />,
-                ]);
+                : [...acc, <UserRowItem
+                    key={`userItem_${index}`}
+                    value={value}
+                    userID={userIndex}
+                />]
         }, []);
 
-        return(
+        return (
             <div className="userListDiv">
                 <table className="table table-striped">
                     <thead>
@@ -71,7 +69,8 @@ const ListUsers = observer(
                                 type="text"
                                 name="firstName"
                                 value={firstName}
-                                onChange={() => {}}
+                                onChange={() => {
+                                }}
                             />
                         </td>
                         <td key="nl_input">
@@ -79,7 +78,8 @@ const ListUsers = observer(
                                 type="text"
                                 name="lastName"
                                 value={lastName}
-                                onChange={() => {}}
+                                onChange={() => {
+                                }}
                             />
                         </td>
                         <td key="age_input">
@@ -89,7 +89,8 @@ const ListUsers = observer(
                                 step="1"
                                 name="age"
                                 value={age}
-                                onChange={() => {}}
+                                onChange={() => {
+                                }}
                             />
                         </td>
                         <td key="actoions_input">
