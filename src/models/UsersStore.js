@@ -17,6 +17,7 @@ class ObservableUsersStore {
 
         lst.users = JSON.stringify(this.usersState);
     }
+
     // Пример функции добавления
     addUserItem = action('addUserItem', function(userItem) {
         const guid = uuidv4();
@@ -24,7 +25,13 @@ class ObservableUsersStore {
         this.users.push({ ...userItem, ...{ guid } });
         this.saveLocal();
     });
+
     // Добавить функцию удаления
+    deleteUserItem = action('deleteUserItem', function(id) {
+        const filteredUsers = this.users.filter((el, index) => index !== id);
+        this.users.replace(filteredUsers);
+        this.saveLocal();
+    });
 
     // Добавить функцию редактирования
     updateUserItem = action('updateUserItem', function (id, userItem) {
@@ -37,9 +44,9 @@ class ObservableUsersStore {
             return el;
         })
         this.users.replace(updatedUsers);
+        this.saveLocal();
     })
 }
-
 
 const insertData = store => {
     const lst = typeof localStorage === 'undefined' ? {} : localStorage;
