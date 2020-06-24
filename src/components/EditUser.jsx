@@ -1,27 +1,30 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import usersStore from "../models/UsersStore";
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
 const EditUser = (props) => {
-    const [nameFirst, setNameFirst] = useState('');
-    const [nameLast,setNameLast] = useState('');
-    const [age,setAge] = useState(0);
+    const userId = +props.match.params.userID;
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [age, setAge] = useState(0);
 
+    useEffect(() => {
+        const updateUser = usersStore.usersState.find((el, index) => userId === index);
+        setFirstName(updateUser.name.first);
+        setLastName(updateUser.name.last);
+        setAge(updateUser.age);
+    }, []);
 
 
     const handleClick = () => {
-        const newObj = {
-            name: { first: nameFirst, last: nameLast },
+        const updatedObj = {
+            name: { first: firstName, last: lastName },
             age: age,
         };
 
-        usersStore.addUserItem(newObj);
+        usersStore.updateUserItem(userId, updatedObj);
     }
-
-    // const  handleChange = (e) => {
-    //      this.setState({ [e.target.name]: e.target.value });
-    //  }
 
     return (
         <div className="createuser row">
@@ -36,8 +39,8 @@ const EditUser = (props) => {
                                     // name="name_first"
                                     className="form-control"
                                     type="text"
-                                    onChange={(e)=> setNameFirst(e.target.value)}
-                                    value={nameFirst}
+                                    onChange={(e)=> setFirstName(e.target.value)}
+                                    value={firstName}
                                     data-validation="required"
                                 />
                                 <span id="error_name" className="text-danger"/>
@@ -48,8 +51,8 @@ const EditUser = (props) => {
                                     // id="name_last"
                                     // name="name_last"
                                     className="form-control"
-                                    onChange={(e)=> setNameLast(e.target.value)}
-                                    value={nameLast}
+                                    onChange={(e)=> setLastName(e.target.value)}
+                                    value={lastName}
                                     type="text"
                                     data-validation="email"
                                 />
@@ -77,7 +80,7 @@ const EditUser = (props) => {
                                     id="submit"
                                     onClick={handleClick}
                                 >
-                                    Создать
+                                    Обновить
                                 </Button>
                             </Link>
                         </form>

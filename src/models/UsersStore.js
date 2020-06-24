@@ -27,7 +27,19 @@ class ObservableUsersStore {
     // Добавить функцию удаления
 
     // Добавить функцию редактирования
+    updateUserItem = action('updateUserItem', function (id, userItem) {
+        const updatedUsers = this.users.map((el, index) => {
+            if(index === id){
+                el.name.first = userItem.name.first;
+                el.name.last = userItem.name.last;
+                el.age = userItem.age;
+            }
+            return el;
+        })
+        this.users.replace(updatedUsers);
+    })
 }
+
 
 const insertData = store => {
     const lst = typeof localStorage === 'undefined' ? {} : localStorage;
