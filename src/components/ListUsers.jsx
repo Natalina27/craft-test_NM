@@ -9,11 +9,34 @@ const ListUsers = observer(
     function ListUsers() {
         const [firstName, setFirstName] = useState('');
         const [lastName, setLastName] = useState('');
-        const [age, setAge] = useState(0);
+        const [age, setAge] = useState('');
         const [sortOrder, setSortOrder] = useState(1);
         const [users, setUsers] = useState(usersStore.usersState);
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
+        console.log('[].slice.call(users):', [].slice.call(users));
+
+        const handleSort = (e) => {
+            const sorted = [].slice.call(users).sort((a, b) => {
+                switch (e.target.id) {
+                    case 'sort-index':
+                        if (a.uid === b.uid) { return 0; }
+                        return a.uid > b.uid ? sortOrder : sortOrder * -1;
+                    case 'sort-first-name':
+                        if (a.name.first === b.name.first) { return 0; }
+                        return a.name.first > b.name.first ? sortOrder : sortOrder * -1;
+                    case 'sort-last-name':
+                        if (a.name.last === b.name.last) { return 0; }
+                        return a.name.last > b.name.last ? sortOrder : sortOrder * -1;
+                    case 'sort-age':
+                        if (a.age === b.age) { return 0; }
+                        return a.age > b.age ? sortOrder : sortOrder * -1;
+                }
+            });
+            setSortOrder(sortOrder * -1);
+            setUsers(sorted);
+        }
+
         // Здесь нужно реализовать функцию фильтрации в таблице производя, используйте инпут
 
         const itemsList = users.slice().reduce((acc, value, index) => {
@@ -39,22 +62,38 @@ const ListUsers = observer(
                     <thead>
                     <tr>
                         <th>
-                            <Button variant="outline-dark" id="sort-index">
+                            <Button
+                                variant="outline-dark"
+                                id="sort-index"
+                                onClick={handleSort}
+                            >
                                 #
                             </Button>
                         </th>
                         <th>
-                            <Button variant="outline-dark" id="sort-first-name">
+                            <Button
+                                variant="outline-dark"
+                                id="sort-first-name"
+                                onClick={handleSort}
+                            >
                                 First Name
                             </Button>
                         </th>
                         <th>
-                            <Button variant="outline-dark" id="sort-last-name">
+                            <Button
+                                variant="outline-dark"
+                                id="sort-last-name"
+                                onClick={handleSort}
+                            >
                                 Last Name
                             </Button>
                         </th>
                         <th>
-                            <Button variant="outline-dark" id="sort-age">
+                            <Button
+                                variant="outline-dark"
+                                id="sort-age"
+                                onClick={handleSort}
+                            >
                                 Age
                             </Button>
                         </th>
