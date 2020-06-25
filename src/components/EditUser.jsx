@@ -4,6 +4,9 @@ import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
 const EditUser = (props) => {
+
+console.log('props', props);
+
     const userId = +props.match.params.userID;
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
