@@ -6,10 +6,10 @@ import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
 
 const ListUsers = observer(
-    function ListUsers(props) {
+    function ListUsers() {
         const [firstName, setFirstName] = useState('');
         const [lastName, setLastName] = useState('');
-        const [age, setAge] = useState('');
+        const [age, setAge] = useState(0);
         const [sortOrder, setSortOrder] = useState(1);
         const [users, setUsers] = useState(usersStore.usersState);
 
@@ -17,7 +17,7 @@ const ListUsers = observer(
         // Здесь нужно реализовать функцию фильтрации в таблице производя, используйте инпут
 
         const itemsList = users.slice().reduce((acc, value, index) => {
-            const userIndex = usersStore.usersState.slice().findIndex((el, index) => {
+            const userIndex = usersStore.usersState.slice().findIndex((el) => {
                 return (
                     el.name.first === value.name.first &&
                     el.name.last === value.name.last
@@ -94,8 +94,8 @@ const ListUsers = observer(
                             />
                         </td>
                         <td key="actoions_input">
-                            <span></span>
-                            <span></span>
+                            <span/>
+                            <span/>
                         </td>
                     </tr>
                     {itemsList}
