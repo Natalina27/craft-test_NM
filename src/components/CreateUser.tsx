@@ -3,12 +3,10 @@ import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-
 interface CreateUserProps {
     firstNameInitial: string;
     lastNameInitial: string;
     ageInitial: number;
-
 }
 
 const CreateUser: FunctionComponent<CreateUserProps> =

@@ -14,8 +14,6 @@ const ListUsers = observer(
         const [users, setUsers] = useState(usersStore.usersState);
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
-        console.log('[].slice.call(users):', [].slice.call(users));
-
         const handleSort = (e) => {
             const sorted = [].slice.call(users).sort((a, b) => {
                 switch (e.target.id) {

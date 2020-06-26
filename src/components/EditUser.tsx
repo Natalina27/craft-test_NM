@@ -1,31 +1,37 @@
-import React, {useEffect, useState} from 'react';
-import usersStore from "../models/UsersStore";
+import React, {FC, useEffect, useState} from 'react';
+import usersStore from '../models/UsersStore';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
-const EditUser = (props) => {
+interface EditUserProps {
+    firstNameInit?: string;
+    lastNameInit?: string;
+    ageInit?: number;
+    match: any;
+    params: any;
+    userID: string;
+}
 
-console.log('props', props);
+const EditUser: FC<EditUserProps> = (props) => {
 
     const userId = +props.match.params.userID;
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [age, setAge] = useState(0);
+
+    const [firstName, setFirstName] = useState(props.firstNameInit);
+    const [lastName, setLastName] = useState(props.lastNameInit);
+    const [age, setAge] = useState(props.ageInit);
 
     useEffect(() => {
-        const updateUser = usersStore.usersState.find((el, index) => userId === index);
+        const updateUser = usersStore.usersState.find((el: any, index: number) => userId === index)
         setFirstName(updateUser.name.first);
         setLastName(updateUser.name.last);
         setAge(updateUser.age);
     }, []);
-
 
     const handleClick = () => {
         const updatedObj = {
             name: { first: firstName, last: lastName },
             age: age,
         };
-
         usersStore.updateUserItem(userId, updatedObj);
     }
 
@@ -38,12 +44,10 @@ console.log('props', props);
                             <div className="form-group">
                                 <label htmlFor="myName">First Name *</label>
                                 <input
-                                    // id="name_first"
-                                    // name="name_first"
                                     className="form-control"
                                     type="text"
-                                    onChange={(e)=> setFirstName(e.target.value)}
-                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    value={firstName || ''}
                                     data-validation="required"
                                 />
                                 <span id="error_name" className="text-danger"/>
@@ -51,11 +55,9 @@ console.log('props', props);
                             <div className="form-group">
                                 <label htmlFor="lastname">Last Name *</label>
                                 <input
-                                    // id="name_last"
-                                    // name="name_last"
                                     className="form-control"
-                                    onChange={(e)=> setLastName(e.target.value)}
-                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    value={lastName || ''}
                                     type="text"
                                     data-validation="email"
                                 />
@@ -67,11 +69,9 @@ console.log('props', props);
                             <div className="form-group">
                                 <label htmlFor="age">Age *</label>
                                 <input
-                                    // id="age"
-                                    // name="age"
                                     className="form-control"
-                                    onChange={(e)=> setAge(+e.target.value)}
-                                    value={age}
+                                    onChange={(e) => setAge(Number(e.target.value))}
+                                    value={age || 0}
                                     type="number"
                                     min="1"
                                 />
