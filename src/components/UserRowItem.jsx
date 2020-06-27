@@ -1,10 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import usersStore from "../models/UsersStore";
+
 
 const UserRowItem = props => {
     const userID = parseInt(props.userID, 10);
     const { guid, age, name } = props.value;
+
+    const handleDeleteUser = () => {
+        usersStore.deleteUserItem(userID);
+    }
 
     return (
         <tr key={userID}>
@@ -19,7 +25,7 @@ const UserRowItem = props => {
                     </Link>
                 </span>
                 <span key={`actdelete_${guid}`} className="actions">
-                    <Link to="/" onClick={() => {}}>
+                    <Link to="/" onClick={handleDeleteUser}>
                         <Button variant="outline-danger">Del</Button>
                     </Link>
                 </span>
