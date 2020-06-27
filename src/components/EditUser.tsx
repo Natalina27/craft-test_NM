@@ -4,9 +4,9 @@ import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
 interface EditUserProps {
-    firstNameInit?: string;
-    lastNameInit?: string;
-    ageInit?: number;
+    firstNameInit: string;
+    lastNameInit: string;
+    ageInit: number;
     match: any;
     params: any;
     userID: string;

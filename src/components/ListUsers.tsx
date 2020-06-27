@@ -6,12 +6,12 @@ import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
 
 interface ListUsersProps {
-    firstNameInit?: string;
-    lastNameInit?: string;
-    ageInit?: string;
-    sortOrderInit?: number;
-    filteredListInit?: any;
-    user?: any;
+    firstNameInit: string;
+    lastNameInit: string;
+    ageInit: string;
+    sortOrderInit: number;
+    filteredListInit: any;
+    user: any;
 }
 
 const ListUsers = observer(
@@ -32,6 +32,7 @@ const ListUsers = observer(
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
         const handleSort = (e: any) => {
             const sorted = [...filteredList].sort((a, b) => {
+
                 switch (e.target.id) {
                     case 'sort-index':
                         const aIdx = [...users].findIndex(el => el.guid === a.guid);
