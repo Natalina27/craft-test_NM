@@ -4,21 +4,21 @@ import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
 interface CreateUserProps {
-    firstNameInitial: string;
-    lastNameInitial: string;
-    ageInitial: number;
+    firstNameInit: string;
+    lastNameInit: string;
+    ageInit: number;
 }
 
 const CreateUser: FunctionComponent<CreateUserProps> =
     ({
-         firstNameInitial = '',
-         lastNameInitial= '',
-         ageInitial = 0
+         firstNameInit = '',
+         lastNameInit= '',
+         ageInit = 0
      }) => {
 
-        const [firstName, setFirstName] = useState(firstNameInitial);
-        const [lastName, setLastName] = useState(lastNameInitial);
-        const [age, setAge] = useState(ageInitial);
+        const [firstName, setFirstName] = useState(firstNameInit);
+        const [lastName, setLastName] = useState(lastNameInit);
+        const [age, setAge] = useState(ageInit);
 
         const handleClick = () => {
             const newObj = {
@@ -38,8 +38,8 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                 <div className="form-group">
                                     <label htmlFor="myName">First Name *</label>
                                     <input
-                                        // id="name_first"
-                                        // name="name_first"
+                                        id="name_first"
+                                        name="name_first"
                                         className="form-control"
                                         type="text"
                                         onChange={(e) => setFirstName(e.target.value)}
@@ -51,8 +51,8 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                 <div className="form-group">
                                     <label htmlFor="lastname">Last Name *</label>
                                     <input
-                                        // id="name_last"
-                                        // name="name_last"
+                                        id="name_last"
+                                        name="name_last"
                                         className="form-control"
                                         onChange={(e) => setLastName(e.target.value)}
                                         value={lastName}
@@ -67,8 +67,8 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                 <div className="form-group">
                                     <label htmlFor="age">Age *</label>
                                     <input
-                                        // id="age"
-                                        // name="age"
+                                        id="age"
+                                        name="age"
                                         className="form-control"
                                         onChange={(e) => setAge(+e.target.value)}
                                         value={age}
