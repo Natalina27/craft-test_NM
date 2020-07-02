@@ -2,7 +2,7 @@ import { action, extendObservable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import usersDB from '../users.json';
 
-class ObservableUsersStore {
+class ObservableUsersStore { // нет интерфейса
     constructor() {
         extendObservable(this, {
             users: [],
@@ -59,7 +59,7 @@ const insertData = store => {
 
     return store;
 };
-
+// прочитать про computed
 const usersStore = insertData(new ObservableUsersStore());
 
 export default usersStore;
