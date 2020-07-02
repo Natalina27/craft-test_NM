@@ -3,6 +3,7 @@ import usersStore from '../models/UsersStore';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
+// есть нотация для интерфейса IInterfaceName
 interface EditUserProps {
     firstNameInit: string;
     lastNameInit: string;
@@ -14,17 +15,17 @@ interface EditUserProps {
 
 const EditUser: FC<EditUserProps> = (props) => {
 
-    const userId = +props.match.params.userID;
+    const userId = +props.match.params.userID; //1 неявное приведение 2 лучше использовать готовый хук из react-router
 
-    const [firstName, setFirstName] = useState(props.firstNameInit);
-    const [lastName, setLastName] = useState(props.lastNameInit);
-    const [age, setAge] = useState(props.ageInit);
+    const [firstName, setFirstName] = useState(props.firstNameInit);  // очень странное решение о прямой передаче внешнего значения в initialValue
+    const [lastName, setLastName] = useState(props.lastNameInit); // очень странное решение о прямой передаче внешнего значения в initialValue
+    const [age, setAge] = useState(props.ageInit); // очень странное решение о прямой передаче внешнего значения в initialValue
 
     useEffect(() => {
-        const updateUser = usersStore.usersState.find((el: any, index: number) => userId === index)
-        setFirstName(updateUser.name.first);
-        setLastName(updateUser.name.last);
-        setAge(updateUser.age);
+        const updateUser = usersStore.usersState.find((el: any, index: number) => userId === index) //1 не гуд осуществлять доп операции непосредственно с action, лучше выносить такие вещи 2 any тоже не хорошо)
+        setFirstName(updateUser.name.first); // посмотреть доку как правильно использовать setUpdater
+        setLastName(updateUser.name.last);// посмотреть доку как правильно использовать setUpdater
+        setAge(updateUser.age);// посмотреть доку как правильно использовать setUpdater
     }, []);
 
     const handleClick = () => {
@@ -32,7 +33,7 @@ const EditUser: FC<EditUserProps> = (props) => {
             name: { first: firstName, last: lastName },
             age: age,
         };
-        usersStore.updateUserItem(userId, updatedObj);
+        usersStore.updateUserItem(userId, updatedObj); // посмотреть про runInAction
     }
 
     return (
@@ -46,7 +47,7 @@ const EditUser: FC<EditUserProps> = (props) => {
                                 <input
                                     className="form-control"
                                     type="text"
-                                    onChange={(e) => setFirstName(e.target.value)}
+                                    onChange={(e) => setFirstName(e.target.value)} // лучше такие вещи выносить в хендлер
                                     value={firstName || ''}
                                     data-validation="required"
                                 />
@@ -70,7 +71,7 @@ const EditUser: FC<EditUserProps> = (props) => {
                                 <label htmlFor="age">Age *</label>
                                 <input
                                     className="form-control"
-                                    onChange={(e) => setAge(Number(e.target.value))}
+                                    onChange={(e) => setAge(Number(e.target.value))} // хех, а здесь не забыли, гуд!)
                                     value={age || 0}
                                     type="number"
                                     min="1"
@@ -93,5 +94,5 @@ const EditUser: FC<EditUserProps> = (props) => {
         </div>
     );
 };
-
+// узнать о проблемах дефолтного экспорта
 export default EditUser;

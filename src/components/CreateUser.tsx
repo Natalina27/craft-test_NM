@@ -3,6 +3,7 @@ import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
+// есть нотация для интерфейса IInterfaceName
 interface CreateUserProps {
     firstNameInitial: string;
     lastNameInitial: string;
@@ -10,12 +11,12 @@ interface CreateUserProps {
 }
 
 const CreateUser: FunctionComponent<CreateUserProps> =
-    ({
+    ({  //Прочитать про defaultProps
          firstNameInitial = '',
          lastNameInitial= '',
          ageInitial = 0
      }) => {
-
+        // лучше юзать useReducer
         const [firstName, setFirstName] = useState(firstNameInitial);
         const [lastName, setLastName] = useState(lastNameInitial);
         const [age, setAge] = useState(ageInitial);
@@ -42,7 +43,7 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                         // name="name_first"
                                         className="form-control"
                                         type="text"
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        onChange={(e) => setFirstName(e.target.value)} // лучше такие вещи выносить в хендлер
                                         value={firstName}
                                         data-validation="required"
                                     />
@@ -57,7 +58,7 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                         onChange={(e) => setLastName(e.target.value)}
                                         value={lastName}
                                         type="text"
-                                        data-validation="email"
+                                        data-validation="email" //тут просто опечатка походу)
                                     />
                                     <span
                                         id="error_lastname"
@@ -70,7 +71,7 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                         // id="age"
                                         // name="age"
                                         className="form-control"
-                                        onChange={(e) => setAge(+e.target.value)}
+                                        onChange={(e) => setAge(+e.target.value)} // не очень хороший пример приведения лучше использовать Number()
                                         value={age}
                                         type="number"
                                         min="1"
@@ -94,5 +95,5 @@ const CreateUser: FunctionComponent<CreateUserProps> =
         );
 
     }
-
+// узнать о проблемах дефолтного экспорта
 export default CreateUser;

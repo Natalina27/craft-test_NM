@@ -5,23 +5,26 @@ import {Link} from 'react-router-dom';
 import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
 
+// есть нотация для интерфейса IInterfaceName
 interface ListUsersProps {
     firstNameInit: string;
     lastNameInit: string;
     ageInit: string;
     sortOrderInit: number;
-    filteredListInit: any;
-    user: any;
+    filteredListInit: any; // тут точно не any
+    user: any; // тут точно не any
 }
 
 const ListUsers = observer(
 
     function ListUsers (FC:ListUsersProps , {
+        //Прочитать про defaultProps
         firstNameInit = '',
         lastNameInit = '',
         ageInit = '',
         sortOrderInit = 1,
     }){
+        // лучше юзать useReducer
         const [firstName, setFirstName] = useState(firstNameInit);
         const [lastName, setLastName] = useState(lastNameInit);
         const [age, setAge] = useState(ageInit);
@@ -30,7 +33,7 @@ const ListUsers = observer(
         const [filteredList, setFilteredList] = useState(users);
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
-        const handleSort = (e: any) => {
+        const handleSort = (e: any) => { // точно не any 
             const sorted = [...filteredList].sort((a, b) => {
 
                 switch (e.target.id) {
@@ -50,21 +53,22 @@ const ListUsers = observer(
                         return a.age > b.age ? sortOrder : sortOrder * -1;
                 }
             });
+            // немного переусложнен код, можно чуть проще, но все в целом ок
             setSortOrder(sortOrder * -1);
             setFilteredList(sorted);
         }
 
         // Здесь нужно реализовать функцию фильтрации в таблице производя, используйте инпут
-        const handleFilter = (e: any) => {
+        const handleFilter = (e: any) => { // точно не any 
 
-            const value = e.target.value;
-            const field = e.target.name;
+            const value = e.target.value; // смотрится очень странно
+            const field = e.target.name; // смотрится очень странно
 
             if(field === 'firstName') setFirstName(value);
             if(field === 'lastName') setLastName(value);
             if(field === 'age') setAge(value);
 
-            const filter = users.filter((user: any) => {
+            const filter = users.filter((user: any) => { // точно не any 
                 switch (field) {
                     case 'firstName':
                         return user.name.first.toLowerCase().includes(value.toLowerCase());
@@ -76,6 +80,7 @@ const ListUsers = observer(
                         return user;
                 }
             });
+            // тоже усложнен контракт, пока пойдет
             setFilteredList(filter);
         }
 
@@ -184,5 +189,5 @@ const ListUsers = observer(
         )
     },
 );
-
+// узнать о проблемах дефолтного экспорта
 export default ListUsers;
