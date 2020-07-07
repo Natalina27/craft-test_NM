@@ -1,4 +1,4 @@
-import React, {useState, FunctionComponent } from 'react';
+import React, { FunctionComponent, useReducer, ChangeEvent } from 'react';
 import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -7,43 +7,36 @@ import Button from 'react-bootstrap/Button';
 interface ICreateUserProps {
     firstNameInitial: string;
     lastNameInitial: string;
-    ageInitial: number;
-    onChange: any;
+    ageInitial: string;
 }
+
+const reducer = (state: string, action: string): string =>  action;
 
 export const CreateUser: FunctionComponent<ICreateUserProps> =
     ({  //Прочитать про defaultProps
          firstNameInitial = '',
          lastNameInitial= '',
-         ageInitial = 0,
+         ageInitial = '0',
      }) => {
         // лучше юзать useReducer
-        const [firstName, setFirstName] = useState(firstNameInitial);
-        const [lastName, setLastName] = useState(lastNameInitial);
-        const [age, setAge] = useState(ageInitial);
-
-
+        const [firstName, changeFirstName] = useReducer(reducer, firstNameInitial);
+        const [lastName, changeLastName] = useReducer(reducer, lastNameInitial);
+        const [age, changeAge] = useReducer(reducer, ageInitial);
 
         const handleClick = () => {
             const newObj = {
                 name: {first: firstName, last: lastName},
-                age: age,
+                age: Number(age),
             };
-
             usersStore.addUserItem(newObj);
         }
 
-        const handleChange = (e: any)  => {
-            const inputName = e.target.name;
-            if( inputName === "name_first"){
-                setFirstName(e.target.value);
-            }
-            if( inputName === "name_last"){
-                setLastName(e.target.value);
-            }
-            if( inputName === "age"){
-                setAge(Number(e.target.value));
-            }
+        const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+            const field = event.target.name;
+            const value = event.target.value;
+            field === 'name_first' && changeFirstName(value);
+            field === 'name_last' && changeLastName(value);
+            field === 'age' && changeAge(value);
         }
 
 

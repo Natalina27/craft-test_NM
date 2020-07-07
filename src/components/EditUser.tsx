@@ -12,9 +12,9 @@ interface IEditUserProps {
 }
 
 export const EditUser: FC<IEditUserProps> = (props) => {
-    const { userID } = useParams();
+    const { userID }: any = useParams();
 
-    const numberUserId = Number(userID);
+    const numberUserId: number = Number(userID);
 
     //const userId = +props.match.params.userID; //1 неявное приведение 2 лучше использовать готовый хук из react-router
 
