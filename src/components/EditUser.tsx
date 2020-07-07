@@ -2,27 +2,28 @@ import React, {FC, useEffect, useState} from 'react';
 import usersStore from '../models/UsersStore';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import { useParams } from "react-router-dom";
 
 // есть нотация для интерфейса IInterfaceName
-interface EditUserProps {
+interface IEditUserProps {
     firstNameInit: string;
     lastNameInit: string;
     ageInit: number;
-    match: any;
-    params: any;
-    userID: string;
 }
 
-const EditUser: FC<EditUserProps> = (props) => {
+export const EditUser: FC<IEditUserProps> = (props) => {
+    const { userID } = useParams();
 
-    const userId = +props.match.params.userID; //1 неявное приведение 2 лучше использовать готовый хук из react-router
+    const numberUserId = Number(userID);
+
+    //const userId = +props.match.params.userID; //1 неявное приведение 2 лучше использовать готовый хук из react-router
 
     const [firstName, setFirstName] = useState(props.firstNameInit);  // очень странное решение о прямой передаче внешнего значения в initialValue
     const [lastName, setLastName] = useState(props.lastNameInit); // очень странное решение о прямой передаче внешнего значения в initialValue
     const [age, setAge] = useState(props.ageInit); // очень странное решение о прямой передаче внешнего значения в initialValue
 
     useEffect(() => {
-        const updateUser = usersStore.usersState.find((el: any, index: number) => userId === index) //1 не гуд осуществлять доп операции непосредственно с action, лучше выносить такие вещи 2 any тоже не хорошо)
+        const updateUser = usersStore.usersState.find((el: any, index: number) => numberUserId=== index) //1 не гуд осуществлять доп операции непосредственно с action, лучше выносить такие вещи 2 any тоже не хорошо)
         setFirstName(updateUser.name.first); // посмотреть доку как правильно использовать setUpdater
         setLastName(updateUser.name.last);// посмотреть доку как правильно использовать setUpdater
         setAge(updateUser.age);// посмотреть доку как правильно использовать setUpdater
@@ -33,7 +34,20 @@ const EditUser: FC<EditUserProps> = (props) => {
             name: { first: firstName, last: lastName },
             age: age,
         };
-        usersStore.updateUserItem(userId, updatedObj); // посмотреть про runInAction
+        usersStore.updateUserItem(numberUserId, updatedObj); // посмотреть про runInAction
+    }
+
+    const handleChange = (e: any)  => {
+        const inputName = e.target.name;
+        if (inputName === "name_first") {
+            setFirstName(e.target.value);
+        }
+        if (inputName === "name_last") {
+            setLastName(e.target.value);
+        }
+        if (inputName === "age") {
+            setAge(Number(e.target.value));
+        }
     }
 
     return (
@@ -45,9 +59,11 @@ const EditUser: FC<EditUserProps> = (props) => {
                             <div className="form-group">
                                 <label htmlFor="myName">First Name *</label>
                                 <input
+                                    id="name_first"
+                                    name="name_first"
                                     className="form-control"
                                     type="text"
-                                    onChange={(e) => setFirstName(e.target.value)} // лучше такие вещи выносить в хендлер
+                                    onChange={handleChange} // лучше такие вещи выносить в хендлер
                                     value={firstName || ''}
                                     data-validation="required"
                                 />
@@ -56,11 +72,13 @@ const EditUser: FC<EditUserProps> = (props) => {
                             <div className="form-group">
                                 <label htmlFor="lastname">Last Name *</label>
                                 <input
+                                    id="name_last"
+                                    name="name_last"
                                     className="form-control"
-                                    onChange={(e) => setLastName(e.target.value)}
+                                    onChange={handleChange}
                                     value={lastName || ''}
                                     type="text"
-                                    data-validation="email"
+                                    data-validation="required"
                                 />
                                 <span
                                     id="error_lastname"
@@ -70,8 +88,10 @@ const EditUser: FC<EditUserProps> = (props) => {
                             <div className="form-group">
                                 <label htmlFor="age">Age *</label>
                                 <input
+                                    id="age"
+                                    name="age"
                                     className="form-control"
-                                    onChange={(e) => setAge(Number(e.target.value))} // хех, а здесь не забыли, гуд!)
+                                    onChange={handleChange} // хех, а здесь не забыли, гуд!)
                                     value={age || 0}
                                     type="number"
                                     min="1"
@@ -95,4 +115,4 @@ const EditUser: FC<EditUserProps> = (props) => {
     );
 };
 // узнать о проблемах дефолтного экспорта
-export default EditUser;
+//export default EditUser;

@@ -13,9 +13,10 @@ interface ListUsersProps {
     sortOrderInit: number;
     filteredListInit: any; // тут точно не any
     user: any; // тут точно не any
+
 }
 
-const ListUsers = observer(
+export const ListUsers = observer(
 
     function ListUsers (FC:ListUsersProps , {
         //Прочитать про defaultProps
@@ -23,6 +24,8 @@ const ListUsers = observer(
         lastNameInit = '',
         ageInit = '',
         sortOrderInit = 1,
+
+
     }){
         // лучше юзать useReducer
         const [firstName, setFirstName] = useState(firstNameInit);
@@ -33,7 +36,7 @@ const ListUsers = observer(
         const [filteredList, setFilteredList] = useState(users);
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
-        const handleSort = (e: any) => { // точно не any 
+        const handleSort = (e: any) => { // точно не any
             const sorted = [...filteredList].sort((a, b) => {
 
                 switch (e.target.id) {
@@ -59,7 +62,7 @@ const ListUsers = observer(
         }
 
         // Здесь нужно реализовать функцию фильтрации в таблице производя, используйте инпут
-        const handleFilter = (e: any) => { // точно не any 
+        const handleFilter = (e: any) => { // точно не any
 
             const value = e.target.value; // смотрится очень странно
             const field = e.target.name; // смотрится очень странно
@@ -68,7 +71,7 @@ const ListUsers = observer(
             if(field === 'lastName') setLastName(value);
             if(field === 'age') setAge(value);
 
-            const filter = users.filter((user: any) => { // точно не any 
+            const filter = users.filter((user: any) => { // точно не any
                 switch (field) {
                     case 'firstName':
                         return user.name.first.toLowerCase().includes(value.toLowerCase());
@@ -83,6 +86,7 @@ const ListUsers = observer(
             // тоже усложнен контракт, пока пойдет
             setFilteredList(filter);
         }
+
 
         const itemsList = [...filteredList].reduce((acc, value, index) => {
             const userIndex = [...users].findIndex((el) => {
@@ -174,7 +178,7 @@ const ListUsers = observer(
                                 onChange={handleFilter}
                             />
                         </td>
-                        <td key="actoions_input">
+                        <td key="actions_input">
                             <span/>
                             <span/>
                         </td>
@@ -190,4 +194,4 @@ const ListUsers = observer(
     },
 );
 // узнать о проблемах дефолтного экспорта
-export default ListUsers;
+//export default ListUsers;
