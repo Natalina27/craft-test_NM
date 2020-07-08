@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useReducer, ChangeEvent } from 'react';
+import React, { FC, useReducer, ChangeEvent } from 'react';
 import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -12,7 +12,7 @@ interface ICreateUserProps {
 
 const reducer = (state: string, action: string): string =>  action;
 
-export const CreateUser: FunctionComponent<ICreateUserProps> =
+export const CreateUser: FC<ICreateUserProps> =
     ({  //Прочитать про defaultProps
          firstNameInitial = '',
          lastNameInitial= '',

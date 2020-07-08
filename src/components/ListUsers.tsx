@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useReducer} from 'react';
 import {observer} from 'mobx-react';
 import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
@@ -9,10 +9,13 @@ import Button from 'react-bootstrap/Button';
 interface IListUsersProps {
     firstNameInit: string;
     lastNameInit: string;
-    ageInit: number;
+    ageInit: string;
     sortOrderInit: number;
     users: Array<object>;
 }
+
+const reducer = (state: string, action: string): string =>  action;
+
 
 export const ListUsers = observer(
 
@@ -25,16 +28,16 @@ export const ListUsers = observer(
         users = usersStore.usersState
     }){
         // лучше юзать useReducer
-        const [firstName, setFirstName] = useState(firstNameInit);
-        const [lastName, setLastName] = useState(lastNameInit);
-        const [age, setAge] = useState(ageInit);
+        const [firstName, setFirstName] = useReducer(reducer, firstNameInit);
+        const [lastName, setLastName] = useReducer(reducer,lastNameInit);
+        const [age, setAge] = useReducer(reducer,ageInit);
         const [sortOrder, setSortOrder] = useState(sortOrderInit);
         //const users = usersStore.usersState;
-        const [filteredList, setFilteredList] = useState(users);
+        const [filteredList, setFilteredList] = useState(users); //?
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
         const handleSort = (e: any) => { // точно не any
-            const sorted = [...filteredList].sort((a, b) => {
+            const sorted = [...filteredList].sort((a:any, b:any): any => {
 
                 switch (e.target.id) {
                     case 'sort-index':
