@@ -1,108 +1,50 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState, useReducer, ChangeEvent} from 'react';
 import {observer} from 'mobx-react';
 import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
+import { reduceUsers } from '../mobx/reducer';
 
 // есть нотация для интерфейса IInterfaceName
 interface IListUsersProps {
-    firstNameInit: string;
-    lastNameInit: string;
-    ageInit: string;
     sortOrderInit: number;
     users: Array<object>;
 }
-
-const reducer = (state: string, action: string): string =>  action;
 
 
 export const ListUsers = observer(
 
     function ListUsers (FC:IListUsersProps , {
         //Прочитать про defaultProps
-        firstNameInit = '',
-        lastNameInit = '',
-        ageInit = '',
         sortOrderInit = 1,
         users = usersStore.usersState
     }){
         // лучше юзать useReducer
-        const [firstName, setFirstName] = useReducer(reducer, firstNameInit);
-        const [lastName, setLastName] = useReducer(reducer,lastNameInit);
-        const [age, setAge] = useReducer(reducer,ageInit);
         const [sortOrder, setSortOrder] = useState(sortOrderInit);
-        //const users = usersStore.usersState;
-        const [filteredList, setFilteredList] = useState(users); //?
+        const [filteredList, dispatch] = useReducer(reduceUsers, users);
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам
-        const handleSort = (e: any) => { // точно не any
-            const sorted = [...filteredList].sort((a:any, b:any): any => {
-
-                switch (e.target.id) {
-                    case 'sort-index':
-                        const aIdx = [...users].findIndex(el => el.guid === a.guid);
-                        const bIdx = [...users].findIndex(el => el.guid === b.guid);
-                        if (aIdx === bIdx) { return 0; }
-                        return aIdx > bIdx ? sortOrder : sortOrder * -1;
-                    case 'sort-first-name':
-                        if (a.name.first === b.name.first) { return 0; }
-                        return a.name.first > b.name.first ? sortOrder : sortOrder * -1;
-                    case 'sort-last-name':
-                        if (a.name.last === b.name.last) { return 0; }
-                        return a.name.last > b.name.last ? sortOrder : sortOrder * -1;
-                    case 'sort-age':
-                        if (a.age === b.age) { return 0; }
-                        return a.age > b.age ? sortOrder : sortOrder * -1;
-                }
-            });
-            // немного переусложнен код, можно чуть проще, но все в целом ок
+        const handleSort = (e: any): void => { // точно не any (не срабатывает свойство .id and .name при Mouse events onClick)
+            dispatch({type: e.target.name, payload:{value: '', sortOrder: sortOrder}});
             setSortOrder(sortOrder * -1);
-            setFilteredList(sorted);
         }
 
         // Здесь нужно реализовать функцию фильтрации в таблице производя, используйте инпут
-        const handleFilter = (e: any) => { // точно не any
-
-            const value = e.target.value; // смотрится очень странно
-            const field = e.target.name; // смотрится очень странно
-
-            if(field === 'firstName') setFirstName(value);
-            if(field === 'lastName') setLastName(value);
-            if(field === 'age') setAge(value);
-
-            const filter = users.filter((user: any) => { // точно не any
-                switch (field) {
-                    case 'firstName':
-                        return user.name.first.toLowerCase().includes(value.toLowerCase());
-                    case 'lastName':
-                        return user.name.last.toLowerCase().includes(value.toLowerCase());
-                    case 'age':
-                        return user.age.toString().includes(value.toString());
-                    default:
-                        return user;
-                }
-            });
-            // тоже усложнен контракт, пока пойдет
-            setFilteredList(filter);
+        const handleFilter = (e: ChangeEvent<HTMLInputElement>): void => {
+            dispatch({type: e.target.name, payload:{value: e.target.value, sortOrder: sortOrder}});
         }
-
-
         const itemsList = [...filteredList].reduce((acc, value, index) => {
-            const userIndex = [...users].findIndex((el) => {
-                return (
-                    el.name.first === value.name.first &&
-                    el.name.last === value.name.last
-                );
-            });
-
+            const userIndex = [...users].findIndex((el) => el.guid === value.guid);
             return userIndex === -1
                 ? acc
-                : acc.concat( [<UserRowItem
-                    key={`userItem_${index}`}
-                    value={value}
-                    userID={userIndex}
-                />])
+                : acc.concat([
+                    <UserRowItem
+                        key={`userItem_${index}`}
+                        value={value}
+                        userID={userIndex}
+                    />
+                ])
         }, []);
 
         return (
@@ -113,7 +55,7 @@ export const ListUsers = observer(
                         <th>
                             <Button
                                 variant="outline-dark"
-                                id="sort-index"
+                                name="sort-index"
                                 onClick={handleSort}
                             >
                                 #
@@ -122,7 +64,7 @@ export const ListUsers = observer(
                         <th>
                             <Button
                                 variant="outline-dark"
-                                id="sort-first-name"
+                                name="sort-first-name"
                                 onClick={handleSort}
                             >
                                 First Name
@@ -131,7 +73,7 @@ export const ListUsers = observer(
                         <th>
                             <Button
                                 variant="outline-dark"
-                                id="sort-last-name"
+                                name="sort-last-name"
                                 onClick={handleSort}
                             >
                                 Last Name
@@ -140,7 +82,7 @@ export const ListUsers = observer(
                         <th>
                             <Button
                                 variant="outline-dark"
-                                id="sort-age"
+                                name="sort-age"
                                 onClick={handleSort}
                             >
                                 Age
@@ -156,7 +98,7 @@ export const ListUsers = observer(
                             <input
                                 type="text"
                                 name="firstName"
-                                value={firstName}
+                                // value={firstName}
                                 onChange={handleFilter}
                             />
                         </td>
@@ -164,7 +106,7 @@ export const ListUsers = observer(
                             <input
                                 type="text"
                                 name="lastName"
-                                value={lastName}
+                                // value={lastName}
                                 onChange={handleFilter}
                             />
                         </td>
@@ -174,7 +116,7 @@ export const ListUsers = observer(
                                 min="1"
                                 step="1"
                                 name="age"
-                                value={age}
+                                // value={age}
                                 onChange={handleFilter}
                             />
                         </td>
@@ -193,5 +135,3 @@ export const ListUsers = observer(
         )
     },
 );
-// узнать о проблемах дефолтного экспорта
-//export default ListUsers;

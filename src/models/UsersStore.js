@@ -2,7 +2,7 @@ import { action, extendObservable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 import usersDB from '../users.json';
 
-class ObservableUsersStore { // нет интерфейса
+class ObservableUsersStore {
     constructor() {
         extendObservable(this, {
             users: [],
@@ -37,9 +37,11 @@ class ObservableUsersStore { // нет интерфейса
     updateUserItem = action('updateUserItem', function (id, userItem) {
         const updatedUsers = this.users.map((el, index) => {
             if(index === id){
-                el.name.first = userItem.name.first;
-                el.name.last = userItem.name.last;
-                el.age = userItem.age;
+                return {
+                    ...el,
+                    name: {first: userItem.name.first, last: userItem.name.last},
+                    age: userItem.age
+                }
             }
             return el;
         })
