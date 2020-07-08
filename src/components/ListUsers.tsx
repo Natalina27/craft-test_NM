@@ -6,33 +6,30 @@ import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
 
 // есть нотация для интерфейса IInterfaceName
-interface ListUsersProps {
+interface IListUsersProps {
     firstNameInit: string;
     lastNameInit: string;
-    ageInit: string;
+    ageInit: number;
     sortOrderInit: number;
-    filteredListInit: any; // тут точно не any
-    user: any; // тут точно не any
-
+    users: Array<object>;
 }
 
 export const ListUsers = observer(
 
-    function ListUsers (FC:ListUsersProps , {
+    function ListUsers (FC:IListUsersProps , {
         //Прочитать про defaultProps
         firstNameInit = '',
         lastNameInit = '',
         ageInit = '',
         sortOrderInit = 1,
-
-
+        users = usersStore.usersState
     }){
         // лучше юзать useReducer
         const [firstName, setFirstName] = useState(firstNameInit);
         const [lastName, setLastName] = useState(lastNameInit);
         const [age, setAge] = useState(ageInit);
         const [sortOrder, setSortOrder] = useState(sortOrderInit);
-        const users = usersStore.usersState;
+        //const users = usersStore.usersState;
         const [filteredList, setFilteredList] = useState(users);
 
         // Здесь нужно реализовать функцию сортировки в таблице по заголовкам

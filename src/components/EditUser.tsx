@@ -1,53 +1,41 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import usersStore from '../models/UsersStore';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { useParams } from "react-router-dom";
+import {runInAction} from "mobx";
 
-// есть нотация для интерфейса IInterfaceName
-interface IEditUserProps {
-    firstNameInit: string;
-    lastNameInit: string;
-    ageInit: number;
-}
 
-export const EditUser: FC<IEditUserProps> = (props) => {
-    const { userID }: any = useParams();
+export const EditUser = () => {
+    const {userID}: any = useParams();
+    const userId: number = Number(userID);
 
-    const numberUserId: number = Number(userID);
+    const user = usersStore.usersState.find((el: object, index: number) => userId === index);
 
-    //const userId = +props.match.params.userID; //1 неявное приведение 2 лучше использовать готовый хук из react-router
-
-    const [firstName, setFirstName] = useState(props.firstNameInit);  // очень странное решение о прямой передаче внешнего значения в initialValue
-    const [lastName, setLastName] = useState(props.lastNameInit); // очень странное решение о прямой передаче внешнего значения в initialValue
-    const [age, setAge] = useState(props.ageInit); // очень странное решение о прямой передаче внешнего значения в initialValue
-
-    useEffect(() => {
-        const updateUser = usersStore.usersState.find((el: any, index: number) => numberUserId=== index) //1 не гуд осуществлять доп операции непосредственно с action, лучше выносить такие вещи 2 any тоже не хорошо)
-        setFirstName(updateUser.name.first); // посмотреть доку как правильно использовать setUpdater
-        setLastName(updateUser.name.last);// посмотреть доку как правильно использовать setUpdater
-        setAge(updateUser.age);// посмотреть доку как правильно использовать setUpdater
-    }, []);
+    const [firstName, setFirstName] = useState(user.name.first);
+    const [lastName, setLastName] = useState(user.name.last);
+    const [age, setAge] = useState(user.age);
 
     const handleClick = () => {
-        const updatedObj = {
-            name: { first: firstName, last: lastName },
-            age: age,
-        };
-        usersStore.updateUserItem(numberUserId, updatedObj); // посмотреть про runInAction
+        const users = usersStore.usersState;
+        const updatedUser: object = {...user, name: { first: firstName, last: lastName}, age: age};
+        // usersStore.updateUserItem(userId, updatedUser); // посмотреть про runInAction
+        runInAction(() => {
+            const updatedUsers = users.map((el: object, index: number) => {
+                if(index === userId){
+                    return updatedUser;
+                }
+                return el;
+            })
+            users.replace(updatedUsers);
+            usersStore.saveLocal()
+        })
     }
 
-    const handleChange = (e: any)  => {
-        const inputName = e.target.name;
-        if (inputName === "name_first") {
-            setFirstName(e.target.value);
-        }
-        if (inputName === "name_last") {
-            setLastName(e.target.value);
-        }
-        if (inputName === "age") {
-            setAge(Number(e.target.value));
-        }
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.target.name === 'name_first' && setFirstName(e.target.value);
+        e.target.name === 'name_last' && setLastName(e.target.value);
+        e.target.name === 'age' && setAge(e.target.value);
     }
 
     return (
@@ -91,7 +79,7 @@ export const EditUser: FC<IEditUserProps> = (props) => {
                                     id="age"
                                     name="age"
                                     className="form-control"
-                                    onChange={handleChange} // хех, а здесь не забыли, гуд!)
+                                    onChange={handleChange}
                                     value={age || 0}
                                     type="number"
                                     min="1"
@@ -114,5 +102,4 @@ export const EditUser: FC<IEditUserProps> = (props) => {
         </div>
     );
 };
-// узнать о проблемах дефолтного экспорта
-//export default EditUser;
+
