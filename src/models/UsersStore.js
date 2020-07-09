@@ -37,9 +37,11 @@ class ObservableUsersStore {
     updateUserItem = action('updateUserItem', function (id, userItem) {
         const updatedUsers = this.users.map((el, index) => {
             if(index === id){
-                el.name.first = userItem.name.first;
-                el.name.last = userItem.name.last;
-                el.age = userItem.age;
+                return {
+                    ...el,
+                    name: {first: userItem.name.first, last: userItem.name.last},
+                    age: userItem.age
+                }
             }
             return el;
         })
@@ -59,7 +61,7 @@ const insertData = store => {
 
     return store;
 };
-
+// прочитать про computed
 const usersStore = insertData(new ObservableUsersStore());
 
 export default usersStore;

@@ -1,38 +1,41 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import usersStore from '../models/UsersStore';
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import { useParams } from "react-router-dom";
+import {runInAction} from "mobx";
 
-interface EditUserProps {
-    firstNameInit: string;
-    lastNameInit: string;
-    ageInit: number;
-    match: any;
-    params: any;
-    userID: string;
-}
 
-const EditUser: FC<EditUserProps> = (props) => {
+export const EditUser = () => {
+    const {userID}: any = useParams();
+    const userId: number = Number(userID);
 
-    const userId = +props.match.params.userID;
+    const user = usersStore.usersState.find((el: object, index: number) => userId === index);
 
-    const [firstName, setFirstName] = useState(props.firstNameInit);
-    const [lastName, setLastName] = useState(props.lastNameInit);
-    const [age, setAge] = useState(props.ageInit);
-
-    useEffect(() => {
-        const updateUser = usersStore.usersState.find((el: any, index: number) => userId === index)
-        setFirstName(updateUser.name.first);
-        setLastName(updateUser.name.last);
-        setAge(updateUser.age);
-    }, []);
+    const [firstName, setFirstName] = useState(user.name.first);
+    const [lastName, setLastName] = useState(user.name.last);
+    const [age, setAge] = useState(user.age);
 
     const handleClick = () => {
-        const updatedObj = {
-            name: { first: firstName, last: lastName },
-            age: age,
-        };
-        usersStore.updateUserItem(userId, updatedObj);
+        const users = usersStore.usersState;
+        const updatedUser: object = {...user, name: { first: firstName, last: lastName}, age: age};
+        // usersStore.updateUserItem(userId, updatedUser); // посмотреть про runInAction
+        runInAction(() => {
+            const updatedUsers = users.map((el: object, index: number) => {
+                if(index === userId){
+                    return updatedUser;
+                }
+                return el;
+            })
+            users.replace(updatedUsers);
+            usersStore.saveLocal()
+        })
+    }
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.target.name === 'name_first' && setFirstName(e.target.value);
+        e.target.name === 'name_last' && setLastName(e.target.value);
+        e.target.name === 'age' && setAge(e.target.value);
     }
 
     return (
@@ -44,9 +47,11 @@ const EditUser: FC<EditUserProps> = (props) => {
                             <div className="form-group">
                                 <label htmlFor="myName">First Name *</label>
                                 <input
+                                    id="name_first"
+                                    name="name_first"
                                     className="form-control"
                                     type="text"
-                                    onChange={(e) => setFirstName(e.target.value)}
+                                    onChange={handleChange} // лучше такие вещи выносить в хендлер
                                     value={firstName || ''}
                                     data-validation="required"
                                 />
@@ -55,11 +60,13 @@ const EditUser: FC<EditUserProps> = (props) => {
                             <div className="form-group">
                                 <label htmlFor="lastname">Last Name *</label>
                                 <input
+                                    id="name_last"
+                                    name="name_last"
                                     className="form-control"
-                                    onChange={(e) => setLastName(e.target.value)}
+                                    onChange={handleChange}
                                     value={lastName || ''}
                                     type="text"
-                                    data-validation="email"
+                                    data-validation="required"
                                 />
                                 <span
                                     id="error_lastname"
@@ -69,8 +76,10 @@ const EditUser: FC<EditUserProps> = (props) => {
                             <div className="form-group">
                                 <label htmlFor="age">Age *</label>
                                 <input
+                                    id="age"
+                                    name="age"
                                     className="form-control"
-                                    onChange={(e) => setAge(Number(e.target.value))}
+                                    onChange={handleChange}
                                     value={age || 0}
                                     type="number"
                                     min="1"
@@ -94,4 +103,3 @@ const EditUser: FC<EditUserProps> = (props) => {
     );
 };
 
-export default EditUser;

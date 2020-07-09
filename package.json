@@ -7,6 +7,7 @@
   "author": "Renal Safiulin",
   "license": "MIT",
   "dependencies": {
+    "@types/uuid": "^8.0.0",
     "bootstrap": "^4.5.0",
     "handlebars": "^4.7.6",
     "jquery": "3.5.1",

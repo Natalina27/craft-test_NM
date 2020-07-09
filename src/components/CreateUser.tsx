@@ -1,33 +1,45 @@
-import React, {useState, FunctionComponent } from 'react';
+import React, { FC, useReducer, ChangeEvent } from 'react';
 import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-interface CreateUserProps {
+// есть нотация для интерфейса IInterfaceName
+interface ICreateUserProps {
     firstNameInitial: string;
     lastNameInitial: string;
-    ageInitial: number;
+    ageInitial: string;
 }
 
-const CreateUser: FunctionComponent<CreateUserProps> =
-    ({
+const reducer = (state: string, action: string): string =>  action;
+
+export const CreateUser: FC<ICreateUserProps> =
+    ({  //Прочитать про defaultProps
          firstNameInitial = '',
          lastNameInitial= '',
-         ageInitial = 0
+         ageInitial = '0',
      }) => {
-
-        const [firstName, setFirstName] = useState(firstNameInitial);
-        const [lastName, setLastName] = useState(lastNameInitial);
-        const [age, setAge] = useState(ageInitial);
+        // лучше юзать useReducer
+        const [firstName, changeFirstName] = useReducer(reducer, firstNameInitial);
+        const [lastName, changeLastName] = useReducer(reducer, lastNameInitial);
+        const [age, changeAge] = useReducer(reducer, ageInitial);
 
         const handleClick = () => {
             const newObj = {
                 name: {first: firstName, last: lastName},
-                age: age,
+                age: Number(age),
             };
-
             usersStore.addUserItem(newObj);
         }
+
+        const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+            const field = event.target.name;
+            const value = event.target.value;
+            field === 'name_first' && changeFirstName(value);
+            field === 'name_last' && changeLastName(value);
+            field === 'age' && changeAge(value);
+        }
+
+
 
         return (
             <div className="createuser row">
@@ -38,11 +50,11 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                 <div className="form-group">
                                     <label htmlFor="myName">First Name *</label>
                                     <input
-                                        // id="name_first"
-                                        // name="name_first"
+                                        id="name_first"
+                                        name="name_first"
                                         className="form-control"
                                         type="text"
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        onChange={handleChange} // лучше такие вещи выносить в хендлер
                                         value={firstName}
                                         data-validation="required"
                                     />
@@ -51,13 +63,13 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                 <div className="form-group">
                                     <label htmlFor="lastname">Last Name *</label>
                                     <input
-                                        // id="name_last"
-                                        // name="name_last"
+                                        id="name_last"
+                                        name="name_last"
                                         className="form-control"
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        onChange={handleChange}
                                         value={lastName}
                                         type="text"
-                                        data-validation="email"
+                                        data-validation="required" //тут просто опечатка походу)
                                     />
                                     <span
                                         id="error_lastname"
@@ -67,10 +79,10 @@ const CreateUser: FunctionComponent<CreateUserProps> =
                                 <div className="form-group">
                                     <label htmlFor="age">Age *</label>
                                     <input
-                                        // id="age"
-                                        // name="age"
+                                        id="age"
+                                        name="age"
                                         className="form-control"
-                                        onChange={(e) => setAge(+e.target.value)}
+                                        onChange={handleChange} // не очень хороший пример приведения лучше использовать Number()
                                         value={age}
                                         type="number"
                                         min="1"
@@ -94,5 +106,5 @@ const CreateUser: FunctionComponent<CreateUserProps> =
         );
 
     }
-
-export default CreateUser;
+// узнать о проблемах дефолтного экспорта
+//export default CreateUser;
