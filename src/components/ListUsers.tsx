@@ -4,7 +4,7 @@ import usersStore from '../models/UsersStore';
 import {Link} from 'react-router-dom';
 import UserRowItem from './UserRowItem';
 import Button from 'react-bootstrap/Button';
-import { reduceUsers } from '../mobx/reducer';
+import { reduceUsers } from '../models/reducer';
 
 // есть нотация для интерфейса IInterfaceName
 interface IListUsersProps {

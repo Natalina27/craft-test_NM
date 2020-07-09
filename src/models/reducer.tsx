@@ -1,4 +1,4 @@
-import usersStore from "../models/UsersStore";
+import usersStore from "./UsersStore";
 
 
 export const reduceUsers = (state: any, action: {type: string; payload: {value: string; sortOrder: number};}) => {
